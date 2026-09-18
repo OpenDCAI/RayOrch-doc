@@ -16,7 +16,7 @@ export const enSidebar: ThemeSidebarMulti = {
       collapsed: false,
       items: [
         { text: 'What is RayOrch?', link: 'guide/' },
-        { text: 'Architecture at a Glance', link: 'architecture/' },
+        { text: 'Architecture: Code to Cluster', link: 'architecture/' },
         { text: 'Paper Overview', link: 'paper/' },
       ],
     },

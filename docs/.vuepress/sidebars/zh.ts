@@ -16,7 +16,7 @@ export const zhSidebar: ThemeSidebarMulti = {
       collapsed: false,
       items: [
         { text: 'RayOrch 是什么？', link: 'guide/' },
-        { text: '架构一览', link: 'architecture/' },
+        { text: '架构：从代码到集群', link: 'architecture/' },
         { text: '论文导读', link: 'paper/' },
       ],
     },
