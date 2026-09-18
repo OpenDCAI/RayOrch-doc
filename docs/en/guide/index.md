@@ -1,52 +1,115 @@
-# What is RayOrch?
+# Introduction
 
-RayOrch is a **cardinality-aware, completion-driven dataflow runtime on Ray**. It is designed for AI workloads where one input may fan out into many pieces, pass through several CPU/GPU models, and then be assembled back into one result.
+A multi-stage AI workload quickly runs into problems that are not visible in a single model call:
 
-```text
-PDF ──► pages ──► OCR ──► document
-Video ──► frames ──► vision model ──► summary
-Image ──► detector ──► segmenter ──► saved result
-Prompt ──► model A ──► model B ──► final answer
-```
+- one PDF becomes many pages, and one video becomes many frames;
+- stages need different CPU, GPU, or Python environments;
+- expensive models must stay loaded instead of restarting for every item;
+- pages from different inputs should share a batch without losing ownership;
+- downstream work should start for an input that is ready instead of waiting for the whole stage.
 
-## The problem it solves
+Ray answers questions such as where an actor runs, how many GPUs it reserves, and how remote calls are transported. The application still has to maintain the dataflow relationships above.
 
-Ray gives you distributed tasks, actors, resources, and cluster management. A multi-stage AI application still needs application-level coordination:
-
-- which output belongs to which original input;
-- how one-to-many work is expanded and reduced in order;
-- when each downstream item is ready;
-- how persistent model actors are reused and batched;
-- how failures become final results;
-- how inputs, results, and Benchmark reports are reconstructed.
-
-RayOrch supplies that missing dataflow layer. You write ordinary batched Python UDFs, connect them in a declarative `Pipeline`, and assign Ray resources to each stage.
-
-## Why it can start work earlier
-
-A stage-by-stage executor waits for all work in stage A before starting stage B. RayOrch instead tracks the smallest logical work unit, called a **Grain**. When one Grain has all its inputs, it enters that Call's READY queue immediately—even if other upstream work is still running.
+**RayOrch supplies that missing layer.** Write each stage as a batched UDF, connect the stages in a `Pipeline`, and declare the Ray resources for each stage. RayOrch tracks expansion, ownership, dependencies, and ordered reduction, while Ray performs the physical distributed execution.
 
 ```text
-stage barrier:       A A A A | B B B B | C C C C
-completion-driven:  A A ─► B ─► C
-                       A ─► B ─► C
+PDF ──► Page ──► OCR ──► Document
+Video ──► Frame ──► Vision Model ──► Summary
+Image ──► Detector ──► Segmenter ──► Result
+Prompt ──► Model A ──► Model B ──► Answer
 ```
 
-This is possible because the Pipeline explicitly records both dependencies and cardinality changes. `expand`, `filter`, `broadcast`, and `reduce` are not hidden inside user code.
+## The smallest useful program
 
-## What RayOrch is not
+A RayOrch workload has three core elements:
 
-RayOrch does not replace Ray, model engines, environment managers, or shared storage. Ray continues to schedule resources and actors. vLLM, SGLang, PyTorch, and similar engines perform model computation. RayOrch composes these pieces into one explicit dataflow.
+1. **UDF**: an ordinary Python class whose `run()` method receives and returns batches;
+2. **`RayModule`**: declares a persistent actor pool and its replicas, batch size, and CPU/GPU resources;
+3. **`Pipeline`**: connects stages and marks one-to-many or many-to-one relationships.
 
-## Choose your path
+```python
+import rayorch as ro
 
-| Goal | Start here |
+
+class AddOne:
+    def run(self, values):
+        return [value + 1 for value in values]
+
+
+class MyPipeline(ro.Pipeline):
+    def __init__(self):
+        self.add = ro.RayModule(AddOne).ray_options(
+            replicas=1,
+            batch_size=8,
+            num_cpus=1,
+        )
+
+    def forward(self, values):
+        return self.add(values)
+
+
+result = ro.run(MyPipeline(), [1, 2, 3])
+print(result.outputs)  # [2, 3, 4]
+```
+
+You do not need to understand the compiler, Domains, Grains, or READY queues on your first pass. Read the example as:
+
+> **Write batched functions → connect them in a Pipeline → assign resources → run.**
+
+## What RayOrch handles
+
+Consider `PDF → pages → OCR → document`:
+
+```text
+PDF A ─► A/0 ─┐
+       ├► A/1 ─┼─► OCR ─► assemble PDF A in A/0, A/1, A/2 order
+       └► A/2 ─┘
+
+PDF B ─► B/0 ─┐
+       └► B/1 ─┴─► OCR ─► assemble PDF B in B/0, B/1 order
+```
+
+RayOrch:
+
+- remembers the source PDF of every page;
+- batches ready pages from different PDFs for better model utilization;
+- preserves page order within each PDF;
+- assembles A as soon as A is complete, without waiting for B;
+- reuses a model already loaded in an OCR actor;
+- exposes timing, RPC, batch, and failure information as results or Benchmark reports.
+
+## How it relates to Ray
+
+RayOrch **uses Ray; it does not replace Ray**:
+
+| Component | Main responsibility |
 | --- | --- |
-| Run a small pipeline | [Installation](installation.md) → [First Pipeline](first-pipeline.md) |
-| Understand fan-out and fan-in | [Cardinality operations](../concepts/cardinality.md) |
-| Use multiple machines or GPUs | [Distributed execution](../distributed/) |
-| Run a packaged experiment | [Run a Benchmark](../benchmarks/run.md) |
-| Build your own workload | [Programming model](../concepts/) |
-| Build a reusable Benchmark | [Write a Benchmark](../benchmarks/write.md) |
-| Understand the scheduler | [Runtime architecture](../architecture/runtime.md) |
-| Check whether RayOrch fits the workload | [Capabilities and boundaries](boundaries.md) |
+| Ray | nodes, resources, actors, RPC, object storage, and cluster scheduling |
+| RayOrch | Pipeline dependencies, fan-out/fan-in, lineage, readiness, and result reconstruction |
+| vLLM / SGLang / PyTorch, etc. | actual model inference or computation |
+
+You can therefore keep using Ray's native `num_cpus`, `num_gpus`, custom resources, and `runtime_env`. RayOrch organizes them into an explicit and reusable AI dataflow.
+
+## When it is a good fit
+
+RayOrch is most useful when:
+
+- the workload has two or more CPU/GPU stages;
+- an input fans out into a variable number of children and later reduces;
+- expensive models should live in persistent actors;
+- the same graph must run across multiple machines or GPUs without losing lineage;
+- an experiment should become a configurable, submit-able, and recorded Benchmark.
+
+For a single function, one model request, or an unbounded streaming workload, plain Python, Ray Tasks/Actors, or a streaming system may be simpler. See [What RayOrch Does—and Does Not Do](boundaries.md) for the complete boundary.
+
+## Recommended learning path
+
+For a first run, follow these pages in order:
+
+1. [Installation](installation.md)
+2. [Quickstart—Your First Pipeline](first-pipeline.md)
+3. [Quickstart—Fan-out and Ordered Reduction](fan-out-and-reduce.md)
+4. [Quickstart—Multi-node and Multi-GPU](multi-node.md)
+5. [Quickstart—Run a Benchmark](../benchmarks/run.md)
+
+Read [Framework Design](../architecture/) when you want to understand why the runtime works this way. Move on to the programming model, resources, cross-environment execution, and recovery when building a production workload.

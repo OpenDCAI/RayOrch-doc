@@ -1,39 +1,114 @@
 # Installation
 
-## Requirements
+This page covers the two common installation paths. **Choose based on whether you want to use RayOrch or modify RayOrch itself.**
 
-- Python 3.11 or 3.12;
-- a Ray-compatible environment on the driver and workers;
-- access to a Ray cluster only when running remotely.
+- **User**: write Pipelines or run built-in Benchmarks → install from PyPI;
+- **Developer**: inspect internals, debug the framework, or contribute → clone and install in editable mode.
 
-RayOrch is currently alpha software. Pin the RayOrch and Ray versions used by an experiment.
+RayOrch requires Python `>=3.11, <4`. Python 3.11 or 3.12 in a dedicated environment is recommended to reduce compatibility problems between Ray and model dependencies.
 
-## Install the package
+## Option 1: install as a user
 
 ```bash
-pip install rayorch
+python -m pip install rayorch
 ```
 
-For a source checkout:
+The core package installs RayOrch and Ray. Heavy dependencies such as MinerU, vLLM, SGLang, and Ultralytics are not installed by default; prepare them only for workloads that use them.
+
+### Verify the installation
+
+```bash
+python -c "import ray, rayorch; print('ray', ray.__version__); print('rayorch', rayorch.__version__)"
+```
+
+If both versions are printed, the current Python environment can import Ray and RayOrch.
+
+## Option 2: install for source development
 
 ```bash
 git clone https://github.com/OpenDCAI/RayOrch.git
 cd RayOrch
-pip install -e .
+python -m pip install -e .
 ```
 
-The core package depends on Ray. Heavy workload dependencies such as vLLM, SGLang, Ultralytics, or MinerU are optional and belong to the stages that use them.
+Editable mode means changes under `rayorch/` take effect without reinstalling the package.
 
-## Verify the installation
+To run tests and development tooling as well:
 
 ```bash
-python -c "import rayorch; print(rayorch.__version__)"
+python -m pip install -r requirements-dev.txt
 ```
 
-Then continue with [Your First Pipeline](first-pipeline.md). It runs locally and requires no model or GPU.
+## Run a minimal check
 
-## Cluster installation rule
+Create `check_rayorch.py`:
 
-Every Python process that imports RayOrch code needs compatible Python, Ray, RayOrch, and workload code. You can satisfy this with a stable environment on every eligible node, or with a Ray Job/runtime environment that uploads source and installs dependencies.
+```python
+import rayorch as ro
 
-Model and dataset paths are separate from Python packaging. For multi-node execution, use paths visible at the same location from every eligible node.
+
+class Identity:
+    def run(self, values):
+        return values
+
+
+class Check(ro.Pipeline):
+    def __init__(self):
+        self.identity = ro.RayModule(Identity).ray_options(
+            replicas=1,
+            batch_size=4,
+            num_cpus=1,
+        )
+
+    def forward(self, values):
+        return self.identity(values)
+
+
+if __name__ == "__main__":
+    result = ro.run(Check(), ["Ray", "Orch"])
+    print(result.outputs)
+```
+
+Run it:
+
+```bash
+python check_rayorch.py
+```
+
+The final output should be:
+
+```text
+['Ray', 'Orch']
+```
+
+Ray may also print local runtime logs during first startup. The check succeeds as long as the script reaches the expected output.
+
+## Installation rules for a cluster
+
+For multi-node execution, the driver and every node eligible to host an actor need two things:
+
+1. **an importable code environment**: compatible Python, Ray, RayOrch, and stage dependencies;
+2. **accessible workload paths**: models, inputs, and outputs must be visible from the node that runs the stage.
+
+The simplest production setup uses a consistent environment on every node. During development, a Ray Job can upload local source, and separate stages can declare separate `runtime_env` settings. Large models and datasets should normally live in shared storage or node-local caches rather than being uploaded with Python source.
+
+## Common problems
+
+### `ModuleNotFoundError: rayorch`
+
+Make sure the script uses the same Python environment in which RayOrch was installed:
+
+```bash
+which python
+python -m pip show rayorch
+```
+
+### The driver works, but a worker cannot import the UDF
+
+The driver has the source, but the worker does not. Install the workload on every node or use [Ray Jobs and Source Submission](../distributed/ray-jobs.md).
+
+### The program waits indefinitely for a GPU
+
+Check whether the total `ray_options(num_gpus=...)` demand exceeds cluster capacity, and inspect resource demand with `ray status`. RayOrch does not bypass Ray's resource admission.
+
+After installation, continue with [Your First Pipeline](first-pipeline.md). It requires no model or GPU.

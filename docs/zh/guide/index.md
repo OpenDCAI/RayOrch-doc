@@ -1,52 +1,115 @@
-# RayOrch 是什么？
+# 简介
 
-RayOrch 是一个构建在 Ray 之上的**基数感知（cardinality-aware）、完成驱动（completion-driven）数据流运行时**。它适合这样的 AI 工作负载：一个输入会拆成多个子任务，经过多个 CPU/GPU 模型，再按原始父子关系组装成结果。
+如果你正在搭建一条多阶段 AI 处理链路，代码通常很快会遇到这些问题：
 
-```text
-PDF ──► 页面 ──► OCR ──► 文档
-视频 ──► 帧 ──► 视觉模型 ──► 摘要
-图片 ──► 检测模型 ──► 分割模型 ──► 结果
-Prompt ──► 模型 A ──► 模型 B ──► 最终回答
-```
+- 一个 PDF 会拆成很多页，一个视频会拆成很多帧；
+- 不同阶段分别使用 CPU、GPU，甚至不同 Python 环境；
+- 模型需要常驻，不能每处理一条数据就重新加载；
+- 页面或视频帧可以跨输入合批，但最终结果不能串错；
+- 某个输入已经处理完时，希望下游立刻开始，而不是等待整个阶段结束。
 
-## 它解决什么问题
+Ray 能解决“把 Actor 放到哪台机器、占几张卡、怎样远程调用”的问题，但上述数据流关系仍然需要业务代码自己维护。
 
-Ray 已经提供分布式任务、Actor、资源和集群管理，但一个多阶段 AI 应用仍需自行处理：
-
-- 子结果属于哪个原始输入；
-- 一对多任务怎样展开、怎样按顺序聚合；
-- 每个下游任务到底何时可以运行；
-- 如何复用常驻模型 Actor 并进行批处理；
-- 失败如何传播并形成最终结果；
-- 输入、结果和 Benchmark 报告如何重建。
-
-RayOrch 补上的是这层数据流协调。用户只需编写普通的批量 Python UDF，用声明式 `Pipeline` 连接，并为每个阶段声明 Ray 资源。
-
-## 为什么它可以更早启动下游
-
-传统阶段式执行需要等 A 阶段全部完成后再启动 B。RayOrch 跟踪最小逻辑工作单元 **Grain**。某个 Grain 的全部输入一旦到齐，就会立刻进入对应 Call 的 READY 队列，不必等待其他上游工作结束。
+**RayOrch 用来补上这一层。** 你只需要把每个处理阶段写成批量 UDF，用 `Pipeline` 连接它们，并声明每个阶段需要的 Ray 资源。RayOrch 会跟踪数据的展开、归属、依赖和聚合，再把真正的计算交给 Ray 集群。
 
 ```text
-阶段屏障：    A A A A | B B B B | C C C C
-完成驱动：    A A ─► B ─► C
-                 A ─► B ─► C
+PDF ──► Page ──► OCR ──► Document
+Video ──► Frame ──► Vision Model ──► Summary
+Image ──► Detector ──► Segmenter ──► Result
+Prompt ──► Model A ──► Model B ──► Answer
 ```
 
-它之所以能这样做，是因为 Pipeline 明确表达了依赖和基数变化；`expand`、`filter`、`broadcast`、`reduce` 不再藏在任意业务代码里。
+## 最小使用方式
 
-## 它不替代什么
+一个 RayOrch 负载只有三个核心部分：
 
-RayOrch 不替代 Ray、模型推理框架、环境管理器或共享存储。Ray 继续负责节点、资源和 Actor 调度；vLLM、SGLang、PyTorch 等负责模型计算；RayOrch 把它们组织成一条显式数据流。
+1. **UDF**：普通 Python 类，`run()` 接收一批输入并返回一批输出；
+2. **`RayModule`**：把 UDF 声明成常驻 Actor 池，并配置副本、批大小和 CPU/GPU；
+3. **`Pipeline`**：描述各阶段如何连接，以及哪里发生一对多或多对一。
 
-## 按目标选择入口
+```python
+import rayorch as ro
 
-| 你的目标 | 从这里开始 |
+
+class AddOne:
+    def run(self, values):
+        return [value + 1 for value in values]
+
+
+class MyPipeline(ro.Pipeline):
+    def __init__(self):
+        self.add = ro.RayModule(AddOne).ray_options(
+            replicas=1,
+            batch_size=8,
+            num_cpus=1,
+        )
+
+    def forward(self, values):
+        return self.add(values)
+
+
+result = ro.run(MyPipeline(), [1, 2, 3])
+print(result.outputs)  # [2, 3, 4]
+```
+
+第一次阅读时，你不需要先理解编译器、Domain、Grain 或 READY 队列。先把上面的代码理解成：
+
+> **写批量函数 → 用 Pipeline 连起来 → 给阶段分配资源 → 运行。**
+
+## RayOrch 帮你处理什么
+
+以 `PDF → 页面 → OCR → 文档` 为例：
+
+```text
+PDF A ─► A/0 ─┐
+       ├► A/1 ─┼─► OCR ─► 按 A/0、A/1 的顺序组装 PDF A
+       └► A/2 ─┘
+
+PDF B ─► B/0 ─┐
+       └► B/1 ─┴─► OCR ─► 按 B/0、B/1 的顺序组装 PDF B
+```
+
+RayOrch 会负责：
+
+- 记录每个页面来自哪个 PDF；
+- 将不同 PDF 的就绪页面送入同一个 OCR batch，提高模型利用率；
+- 保持每个 PDF 内部的页面顺序；
+- A 的页面处理完后立即组装 A，不必等待 B；
+- 复用 OCR Actor 中已经加载的模型；
+- 将执行耗时、RPC、batch 和失败信息整理为结果或 Benchmark 报告。
+
+## 它和 Ray 的关系
+
+RayOrch **使用 Ray，而不是替代 Ray**：
+
+| 组件 | 主要负责 |
 | --- | --- |
-| 跑通一个小 Pipeline | [安装](installation.md) → [第一个 Pipeline](first-pipeline.md) |
-| 理解展开与聚合 | [基数操作](../concepts/cardinality.md) |
-| 使用多机多卡 | [分布式运行](../distributed/) |
-| 运行已有实验 | [运行 Benchmark](../benchmarks/run.md) |
-| 开发自己的负载 | [编程模型](../concepts/) |
-| 开发可复用 Benchmark | [编写 Benchmark](../benchmarks/write.md) |
-| 理解内部调度 | [运行时架构](../architecture/runtime.md) |
-| 判断 RayOrch 是否适合当前负载 | [能力边界](boundaries.md) |
+| Ray | 节点、资源、Actor、RPC、对象存储和集群调度 |
+| RayOrch | Pipeline 依赖、展开与聚合、数据归属、就绪判断和结果重建 |
+| vLLM / SGLang / PyTorch 等 | 真正的模型推理或计算 |
+
+因此，你仍然可以使用 Ray 原生的 `num_cpus`、`num_gpus`、自定义资源和 `runtime_env`。RayOrch 只把这些能力放进一条更容易描述和复用的 AI 数据流中。
+
+## 什么时候适合使用
+
+RayOrch 更适合：
+
+- 有两个或更多 CPU/GPU 阶段；
+- 输入会展开为数量不固定的子项，之后还要聚合；
+- 模型初始化昂贵，需要常驻 Actor；
+- 希望多机多卡运行，同时保持清晰的数据血缘；
+- 希望把一次实验包装成可配置、可提交、可记录结果的 Benchmark。
+
+如果任务只是一个简单函数、单次模型调用，或需要无界流式处理，直接使用 Python、Ray Task/Actor 或其他流系统通常更简单。完整边界见[RayOrch 做什么、不做什么](boundaries.md)。
+
+## 推荐阅读顺序
+
+第一次使用，按下面的顺序走一遍即可：
+
+1. [安装](installation.md)
+2. [快速上手—第一个 Pipeline](first-pipeline.md)
+3. [快速上手—一对多与有序聚合](fan-out-and-reduce.md)
+4. [快速上手—多机多卡](multi-node.md)
+5. [快速上手—运行 Benchmark](../benchmarks/run.md)
+
+需要理解“为什么可以这样运行”时，再阅读[框架设计](../architecture/)；需要开发生产负载时，再进入编程模型、资源配置、跨环境和失败恢复章节。

@@ -11,23 +11,25 @@ export const enSidebar: ThemeSidebarMulti = {
   ],
   '/': [
     {
-      text: 'Why RayOrch',
+      text: 'Basic Information',
       icon: 'carbon:idea',
       collapsed: false,
       items: [
-        { text: 'What is RayOrch?', link: 'guide/' },
-        { text: 'Architecture: Code to Cluster', link: 'architecture/' },
+        { text: 'Introduction', link: 'guide/' },
+        { text: 'Framework Design', link: 'architecture/' },
         { text: 'Paper Overview', link: 'paper/' },
       ],
     },
     {
-      text: 'Quickstart',
+      text: 'Get Started',
       icon: 'carbon:rocket',
       collapsed: false,
       items: [
         { text: 'Installation', link: 'guide/installation' },
-        { text: 'Your First Pipeline', link: 'guide/first-pipeline' },
-        { text: 'Run a Benchmark', link: 'benchmarks/run' },
+        { text: 'Quickstart—Your First Pipeline', link: 'guide/first-pipeline' },
+        { text: 'Quickstart—Fan-out and Reduction', link: 'guide/fan-out-and-reduce' },
+        { text: 'Quickstart—Multi-node and Multi-GPU', link: 'guide/multi-node' },
+        { text: 'Quickstart—Run a Benchmark', link: 'benchmarks/run' },
       ],
     },
     {
@@ -38,7 +40,7 @@ export const enSidebar: ThemeSidebarMulti = {
         { text: 'Programming Model', link: 'concepts/' },
         { text: 'Cardinality and Lineage', link: 'concepts/cardinality' },
         { text: 'Resources and Batching', link: 'distributed/resources' },
-        { text: 'Distributed Execution', link: 'distributed/' },
+        { text: 'Distributed Execution Contract', link: 'distributed/' },
         { text: 'Cross-environment Stages', link: 'distributed/cross-environment' },
         { text: 'Ray Jobs and Submission', link: 'distributed/ray-jobs' },
         { text: 'Benchmark Design', link: 'benchmarks/' },

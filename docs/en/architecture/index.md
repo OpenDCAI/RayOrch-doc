@@ -1,9 +1,34 @@
-# Architecture: From Pipeline Code to Ray Execution
+# Framework Design
 
-This page follows one workload from user code to distributed execution. The
-goal is not to enumerate internal classes, but to explain why each layer exists,
-what state it owns, and where to look in the source when something behaves
-unexpectedly.
+This page answers four questions:
+
+1. what the user's UDFs and Pipeline are each responsible for;
+2. how Python declarations become an executable dataflow;
+3. which layer belongs to RayOrch and which belongs to Ray;
+4. how pages, frames, and other children can batch across inputs and still return to the correct parent.
+
+If you have just completed the Quickstart, read “The user-facing picture” and “The complete path through the system” first. The compiler, runtime-state, and source-code sections are for framework development, debugging, and understanding the paper; they are not prerequisites for running a first Pipeline.
+
+## The layers at a glance
+
+```text
+Workload layer       UDFs + Pipeline + resource options
+                         │
+RayOrch layer        compile dependencies, track fan-out/fan-in, schedule readiness, rebuild results
+                         │
+Ray layer            place actors, allocate CPU/GPU, transport RPCs, store objects
+                         │
+Compute backends     Python / PyTorch / vLLM / SGLang / external services
+```
+
+| Component | Written by the user? | Responsibility |
+| --- | --- | --- |
+| UDF | Yes | business computation over one batch |
+| `RayModule` | Yes | UDF construction, replicas, batch size, and resources |
+| `Pipeline.forward()` | Yes | stage connections and fan-out, filtering, broadcast, and reduction |
+| Compiler / Runtime | No | turn a Pipeline into a plan and advance each item by dependency |
+| Ray Worker Actor | No | keep one UDF instance alive and execute batched calls |
+| Benchmark | Optional | package a Pipeline, inputs, submission, and reports as a repeatable experiment |
 
 The central design choice is:
 
