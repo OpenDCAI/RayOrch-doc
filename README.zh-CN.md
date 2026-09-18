@@ -15,7 +15,7 @@ npm run docs:dev
 npm run docs:build
 ```
 
-英文页面位于 `docs/en/`，中文页面位于 `docs/zh/`。新增主题时应尽量保持两种语言的导航和覆盖范围一致。站点按 GitHub Pages 路径 `/RayOrch-Doc/` 构建。
+英文页面位于 `docs/en/`，中文页面位于 `docs/zh/`。新增主题时应尽量保持两种语言的导航和覆盖范围一致。站点按 GitHub Pages 路径 `/RayOrch-doc/` 构建。
 
 ## 许可证
 

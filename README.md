@@ -15,7 +15,7 @@ Build before opening a pull request:
 npm run docs:build
 ```
 
-English pages live in `docs/en/`; Chinese pages live in `docs/zh/`. Keep their navigation and subject coverage aligned. The site is configured for GitHub Pages at `/RayOrch-Doc/`.
+English pages live in `docs/en/`; Chinese pages live in `docs/zh/`. Keep their navigation and subject coverage aligned. The site is configured for GitHub Pages at `/RayOrch-doc/`.
 
 ## License
 
