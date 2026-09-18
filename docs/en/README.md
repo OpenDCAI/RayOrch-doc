@@ -17,8 +17,8 @@ config:
           link: /en/guide/
         -
           theme: alt
-          text: Understand the Model
-          link: /en/concepts/
+          text: API Reference
+          link: /en/api/
         -
           theme: alt
           text: GitHub →

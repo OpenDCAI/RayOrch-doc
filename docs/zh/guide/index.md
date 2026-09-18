@@ -49,3 +49,4 @@ RayOrch 不替代 Ray、模型推理框架、环境管理器或共享存储。Ra
 | 开发自己的负载 | [编程模型](../concepts/) |
 | 开发可复用 Benchmark | [编写 Benchmark](../benchmarks/write.md) |
 | 理解内部调度 | [运行时架构](../architecture/runtime.md) |
+| 判断 RayOrch 是否适合当前负载 | [能力边界](boundaries.md) |

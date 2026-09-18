@@ -49,3 +49,4 @@ RayOrch does not replace Ray, model engines, environment managers, or shared sto
 | Build your own workload | [Programming model](../concepts/) |
 | Build a reusable Benchmark | [Write a Benchmark](../benchmarks/write.md) |
 | Understand the scheduler | [Runtime architecture](../architecture/runtime.md) |
+| Check whether RayOrch fits the workload | [Capabilities and boundaries](boundaries.md) |

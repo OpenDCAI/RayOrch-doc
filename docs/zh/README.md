@@ -17,8 +17,8 @@ config:
           link: /zh/guide/
         -
           theme: alt
-          text: 理解编程模型
-          link: /zh/concepts/
+          text: API Reference
+          link: /zh/api/
         -
           theme: alt
           text: GitHub →
