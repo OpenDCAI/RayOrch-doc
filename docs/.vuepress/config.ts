@@ -17,6 +17,7 @@ export default defineUserConfig({
     cache: 'filesystem',
     autoFrontmatter: false,
     search: { provider: 'local' },
+    markdown: { mermaid: true },
     codeHighlighter: { lineNumbers: true },
   }),
   plugins: [redirectPlugin({ autoLocale: true })],

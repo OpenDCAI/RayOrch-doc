@@ -19,6 +19,7 @@
     "@vuepress/bundler-vite": "^2.0.0-rc.28",
     "@vuepress/plugin-redirect": "^2.0.0-rc.128",
     "http-server": "^14.1.1",
+    "mermaid": "^11.17.2",
     "sass-embedded": "^1.104.1",
     "typescript": "^5.9.3",
     "vue": "^3.5.43",
