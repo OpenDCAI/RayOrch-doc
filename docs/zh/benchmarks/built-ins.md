@@ -1,40 +1,18 @@
-# 内置负载
+# 内置 Benchmark
 
-## 真实模型适配
+内置 Benchmark 已拆分为独立案例页，每一页都包含负载解释、Mermaid 拓扑、可运行配置、输出字段和可观察的性能维度。
 
-| Benchmark | 拓扑 | 展示重点 |
-| --- | --- | --- |
-| `MinerUBench` | PDF → Page → OCR → Document | 动态展开、GPU Actor 池、有序重建 |
-| `YoloSamBench` | Image → YOLO → SAM → Save | 两个常驻视觉模型池、多输出阶段 |
-| `DualVllmBench` | Prompt → vLLM A → vLLM B | 一条图内的两个常驻 LLM 引擎 |
-| `SglangVllmBench` | Prompt → SGLang → vLLM | 每阶段独立 Conda 环境 |
+## 真实模型负载
 
-这些案例需要各自后端、兼容 CUDA 栈、模型文件和足够 GPU 资源。
+- [MinerU PDF](mineru.md)：动态页面展开、跨 PDF GPU 组批和保序文档重建。
+- [YOLO → SAM](yolo-sam.md)：两个常驻视觉模型池组成的多阶段图片流水线。
+- [双 vLLM](dual-vllm.md)：两个常驻 LLM 引擎串联的生成与改写流程。
+- [SGLang → vLLM](sglang-vllm.md)：两个推理后端位于不同 Conda 环境的跨环境 Pipeline。
 
 ## 无依赖拓扑参考
 
-| Benchmark | 拓扑 |
-| --- | --- |
-| `DocumentTopologyBench` | 嵌套 Document → Page → TableJob → Page → Document |
-| `VideoCaptionTopologyBench` | Video → Frame → Caption → Video |
-| `VideoMultimodalTopologyBench` | Audio 与 Frame 两个兄弟子域回到 Video 合并 |
+- [嵌套文档](document-topology.md)：Document → Page → TableJob 的两层展开与归并。
+- [视频描述](video-caption.md)：Video → Frame → Video 的基础 `1 → M → 1`。
+- [多模态视频](video-multimodal.md)：音频和视觉兄弟分支独立推进后按父 Video 汇合。
 
-它们是确定性案例，不需要模型和数据集，用于展示调度形状；不是生产级 Docling、VLM、ASR 或视觉适配器。
-
-## 不导入重依赖即可发现
-
-```python
-from rayorch.benchmark import available, load
-
-print(available())
-Bench = load("document_topology")
-report = Bench(output_dir="./results").run()
-```
-
-也可以直接导入已注册的公开类：
-
-```python
-from rayorch.benchmark import YoloSamBench
-```
-
-懒加载注册表本身不会导入模型后端。
+完整选择建议见 [Benchmarks 总览](index.md)，指标解释见[解读性能结果](performance.md)。

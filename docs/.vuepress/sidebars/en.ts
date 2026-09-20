@@ -9,6 +9,47 @@ export const enSidebar: ThemeSidebarMulti = {
       items: ['index'],
     },
   ],
+  '/benchmarks/': [
+    {
+      text: 'Benchmarks',
+      icon: 'carbon:chart-evaluation',
+      collapsed: false,
+      items: [
+        { text: 'Overview', link: 'benchmarks/' },
+        { text: 'Run a Benchmark', link: 'benchmarks/run' },
+        { text: 'Read Performance Results', link: 'benchmarks/performance' },
+      ],
+    },
+    {
+      text: 'Real-model Workloads',
+      icon: 'carbon:machine-learning-model',
+      collapsed: false,
+      items: [
+        { text: 'MinerU PDF', link: 'benchmarks/mineru' },
+        { text: 'YOLO → SAM', link: 'benchmarks/yolo-sam' },
+        { text: 'Dual vLLM', link: 'benchmarks/dual-vllm' },
+        { text: 'SGLang → vLLM', link: 'benchmarks/sglang-vllm' },
+      ],
+    },
+    {
+      text: 'Topology References',
+      icon: 'carbon:flow',
+      collapsed: false,
+      items: [
+        { text: 'Nested Document', link: 'benchmarks/document-topology' },
+        { text: 'Video Caption', link: 'benchmarks/video-caption' },
+        { text: 'Video Multimodal', link: 'benchmarks/video-multimodal' },
+      ],
+    },
+    {
+      text: 'Build Your Own',
+      icon: 'carbon:development',
+      collapsed: false,
+      items: [
+        { text: 'Write a Benchmark', link: 'benchmarks/write' },
+      ],
+    },
+  ],
   '/': [
     {
       text: 'Basic Information',
@@ -43,9 +84,6 @@ export const enSidebar: ThemeSidebarMulti = {
         { text: 'Distributed Execution Contract', link: 'distributed/' },
         { text: 'Cross-environment Stages', link: 'distributed/cross-environment' },
         { text: 'Ray Jobs and Submission', link: 'distributed/ray-jobs' },
-        { text: 'Benchmark Design', link: 'benchmarks/' },
-        { text: 'Write a Benchmark', link: 'benchmarks/write' },
-        { text: 'Built-in Workloads', link: 'benchmarks/built-ins' },
         { text: 'Completion-driven Runtime', link: 'architecture/runtime' },
         { text: 'Reproduce the Experiments', link: 'paper/reproduction' },
       ],
