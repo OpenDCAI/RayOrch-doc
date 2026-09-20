@@ -15,9 +15,9 @@ export const zhSidebar: ThemeSidebarMulti = {
       icon: 'carbon:chart-evaluation',
       collapsed: false,
       items: [
-        { text: '总览', link: 'benchmarks/' },
-        { text: '运行 Benchmark', link: 'benchmarks/run' },
-        { text: '解读性能结果', link: 'benchmarks/performance' },
+        { text: '总览', link: 'index' },
+        { text: '运行 Benchmark', link: 'run' },
+        { text: '解读性能结果', link: 'performance' },
       ],
     },
     {
@@ -25,10 +25,10 @@ export const zhSidebar: ThemeSidebarMulti = {
       icon: 'carbon:machine-learning-model',
       collapsed: false,
       items: [
-        { text: 'MinerU PDF', link: 'benchmarks/mineru' },
-        { text: 'YOLO → SAM', link: 'benchmarks/yolo-sam' },
-        { text: '双 vLLM', link: 'benchmarks/dual-vllm' },
-        { text: 'SGLang → vLLM', link: 'benchmarks/sglang-vllm' },
+        { text: 'MinerU PDF', link: 'mineru' },
+        { text: 'YOLO → SAM', link: 'yolo-sam' },
+        { text: '双 vLLM', link: 'dual-vllm' },
+        { text: 'SGLang → vLLM', link: 'sglang-vllm' },
       ],
     },
     {
@@ -36,9 +36,9 @@ export const zhSidebar: ThemeSidebarMulti = {
       icon: 'carbon:flow',
       collapsed: false,
       items: [
-        { text: '嵌套文档', link: 'benchmarks/document-topology' },
-        { text: '视频描述', link: 'benchmarks/video-caption' },
-        { text: '多模态视频', link: 'benchmarks/video-multimodal' },
+        { text: '嵌套文档', link: 'document-topology' },
+        { text: '视频描述', link: 'video-caption' },
+        { text: '多模态视频', link: 'video-multimodal' },
       ],
     },
     {
@@ -46,7 +46,7 @@ export const zhSidebar: ThemeSidebarMulti = {
       icon: 'carbon:development',
       collapsed: false,
       items: [
-        { text: '编写 Benchmark', link: 'benchmarks/write' },
+        { text: '编写 Benchmark', link: 'write' },
       ],
     },
   ],

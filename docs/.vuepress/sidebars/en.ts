@@ -15,9 +15,9 @@ export const enSidebar: ThemeSidebarMulti = {
       icon: 'carbon:chart-evaluation',
       collapsed: false,
       items: [
-        { text: 'Overview', link: 'benchmarks/' },
-        { text: 'Run a Benchmark', link: 'benchmarks/run' },
-        { text: 'Read Performance Results', link: 'benchmarks/performance' },
+        { text: 'Overview', link: 'index' },
+        { text: 'Run a Benchmark', link: 'run' },
+        { text: 'Read Performance Results', link: 'performance' },
       ],
     },
     {
@@ -25,10 +25,10 @@ export const enSidebar: ThemeSidebarMulti = {
       icon: 'carbon:machine-learning-model',
       collapsed: false,
       items: [
-        { text: 'MinerU PDF', link: 'benchmarks/mineru' },
-        { text: 'YOLO → SAM', link: 'benchmarks/yolo-sam' },
-        { text: 'Dual vLLM', link: 'benchmarks/dual-vllm' },
-        { text: 'SGLang → vLLM', link: 'benchmarks/sglang-vllm' },
+        { text: 'MinerU PDF', link: 'mineru' },
+        { text: 'YOLO → SAM', link: 'yolo-sam' },
+        { text: 'Dual vLLM', link: 'dual-vllm' },
+        { text: 'SGLang → vLLM', link: 'sglang-vllm' },
       ],
     },
     {
@@ -36,9 +36,9 @@ export const enSidebar: ThemeSidebarMulti = {
       icon: 'carbon:flow',
       collapsed: false,
       items: [
-        { text: 'Nested Document', link: 'benchmarks/document-topology' },
-        { text: 'Video Caption', link: 'benchmarks/video-caption' },
-        { text: 'Video Multimodal', link: 'benchmarks/video-multimodal' },
+        { text: 'Nested Document', link: 'document-topology' },
+        { text: 'Video Caption', link: 'video-caption' },
+        { text: 'Video Multimodal', link: 'video-multimodal' },
       ],
     },
     {
@@ -46,7 +46,7 @@ export const enSidebar: ThemeSidebarMulti = {
       icon: 'carbon:development',
       collapsed: false,
       items: [
-        { text: 'Write a Benchmark', link: 'benchmarks/write' },
+        { text: 'Write a Benchmark', link: 'write' },
       ],
     },
   ],
