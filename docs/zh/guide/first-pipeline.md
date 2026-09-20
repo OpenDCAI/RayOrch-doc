@@ -42,7 +42,8 @@ class AddTwo(ro.Pipeline):
 
 
 if __name__ == "__main__":
-    result = ro.run(AddTwo(), [1, 2, 3])
+    pipeline = AddTwo()
+    result = pipeline.run([1, 2, 3])
     print(result.outputs)
 ```
 
@@ -111,10 +112,11 @@ def forward(self, values):
 
 `forward()` 构建的是静态图，不会在这里真正执行 `AddOne.run()`。其中的 `values` 和 `after_first` 是符号化的 `Port`，用来表达“第二个阶段依赖第一个阶段的输出”。
 
-### `ro.run()`：编译、启动和收集结果
+### `pipeline.run()`：编译、启动和收集结果
 
 ```python
-result = ro.run(AddTwo(), [1, 2, 3])
+pipeline = AddTwo()
+result = pipeline.run([1, 2, 3])
 ```
 
 一次调用会完成：
@@ -145,8 +147,8 @@ RayOrch 会为该阶段创建两个 Actor，共享它的就绪任务。确保本
 ### 处理更多输入
 
 ```python
-result = ro.run(
-    AddTwo(),
+pipeline = AddTwo()
+result = pipeline.run(
     list(range(100)),
     input_batch_size=20,
     max_active_input_batches=2,
@@ -163,7 +165,7 @@ result = ro.run(
 
 ## 5. 需要多次运行时复用 Actor
 
-`ro.run()` 适合一次有限输入。如果模型加载很慢，并且同一 Pipeline 要连续执行多次，可以直接使用 `Executor`：
+`pipeline.run()` 适合一次有限输入，并会在结束后关闭临时 Executor；等价的函数式入口 `ro.run(pipeline, inputs)` 仍然保留。如果模型加载很慢，并且同一 Pipeline 要连续执行多次，可以直接使用 `Executor`：
 
 ```python
 with ro.Executor(AddTwo()) as executor:
@@ -183,6 +185,6 @@ print(second.outputs)  # [12, 22]
 - 一个带 `run()` 的批量 UDF；
 - 一个用 `RayModule` 声明阶段的 `Pipeline`；
 - 一个 `forward()` 描述依赖；
-- 一次 `ro.run()` 提交输入。
+- 一次 `pipeline.run()` 提交输入。
 
 下一章会加入 RayOrch 最关键的数据流能力：[一个输入展开成多个子项，再按原顺序聚合](fan-out-and-reduce.md)。

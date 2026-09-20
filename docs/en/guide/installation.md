@@ -65,7 +65,7 @@ class Check(ro.Pipeline):
 
 
 if __name__ == "__main__":
-    result = ro.run(Check(), ["Ray", "Orch"])
+    result = Check().run(["Ray", "Orch"])
     print(result.outputs)
 ```
 

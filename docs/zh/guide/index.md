@@ -48,7 +48,7 @@ class MyPipeline(ro.Pipeline):
         return self.add(values)
 
 
-result = ro.run(MyPipeline(), [1, 2, 3])
+result = MyPipeline().run([1, 2, 3])
 print(result.outputs)  # [2, 3, 4]
 ```
 

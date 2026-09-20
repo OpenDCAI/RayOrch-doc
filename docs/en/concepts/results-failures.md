@@ -5,7 +5,7 @@
 `RunResult.outputs` preserves the Pipeline output structure. Successful business values are returned unchanged, including `None` and empty lists.
 
 ```python
-result = ro.run(MyPipeline(), inputs)
+result = MyPipeline().run(inputs)
 print(result.outputs)
 print(result.elapsed_s)
 print(result.rpc_count)

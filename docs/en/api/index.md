@@ -4,11 +4,11 @@ Import application APIs from `rayorch`:
 
 | API | Purpose |
 | --- | --- |
-| `Pipeline` | declare a static dataflow in `forward()` |
+| `Pipeline` | declare a static dataflow in `forward()` and execute one finite input with `pipeline.run(...)` |
 | `RayModule` | declare a UDF, constructor args, outputs, and resources |
 | `function` | adapt a callable into a stateless `RayModule` |
 | `F.expand`, `F.filter`, `F.broadcast`, `F.reduce` | declare cardinality and lineage |
-| `run` | execute one finite input with automatic cleanup |
+| `run` | equivalent functional form: `rayorch.run(pipeline, ...)` |
 | `Executor` | reuse persistent actor pools across runs |
 | `RunResult`, `OutputIssue`, `ItemOutcome` | inspect outputs and run metrics |
 | `RecordFailure`, `GroupFailure` | return explicit business failures from UDFs |

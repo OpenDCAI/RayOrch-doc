@@ -42,7 +42,8 @@ class AddTwo(ro.Pipeline):
 
 
 if __name__ == "__main__":
-    result = ro.run(AddTwo(), [1, 2, 3])
+    pipeline = AddTwo()
+    result = pipeline.run([1, 2, 3])
     print(result.outputs)
 ```
 
@@ -109,10 +110,11 @@ def forward(self, values):
 
 `forward()` builds a static graph; it does not execute `AddOne.run()` at this point. `values` and `after_first` are symbolic `Port` values expressing that the second stage depends on the first.
 
-### `ro.run()`: compile, start, execute, and collect
+### `pipeline.run()`: compile, start, execute, and collect
 
 ```python
-result = ro.run(AddTwo(), [1, 2, 3])
+pipeline = AddTwo()
+result = pipeline.run([1, 2, 3])
 ```
 
 This call:
@@ -143,8 +145,8 @@ RayOrch creates two actors for that stage and shares ready work across them. Mak
 ### Process more input
 
 ```python
-result = ro.run(
-    AddTwo(),
+pipeline = AddTwo()
+result = pipeline.run(
     list(range(100)),
     input_batch_size=20,
     max_active_input_batches=2,
@@ -161,7 +163,7 @@ Keep the defaults at first; tune them independently as the workload grows.
 
 ## 5. Reuse actors across several runs
 
-`ro.run()` is convenient for one finite input. If model startup is expensive and the same Pipeline runs repeatedly, use `Executor` directly:
+`pipeline.run()` is convenient for one finite input and closes its temporary Executor afterward. The equivalent functional form `ro.run(pipeline, inputs)` remains available. If model startup is expensive and the same Pipeline runs repeatedly, use `Executor` directly:
 
 ```python
 with ro.Executor(AddTwo()) as executor:
@@ -181,6 +183,6 @@ A first Pipeline only needs:
 - a batched UDF with `run()`;
 - a `Pipeline` that declares stages with `RayModule`;
 - a `forward()` method that describes dependencies;
-- one `ro.run()` call with source data.
+- one `pipeline.run()` call with source data.
 
 The next chapter introduces RayOrch's central dataflow operation: [fan one input out into children and reduce them in order](fan-out-and-reduce.md).

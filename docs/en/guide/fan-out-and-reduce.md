@@ -71,7 +71,7 @@ if __name__ == "__main__":
         {"name": "guide", "pages": 2},
         {"name": "paper", "pages": 3},
     ]
-    result = ro.run(DocumentPipeline(), inputs)
+    result = DocumentPipeline().run(inputs)
     print(result.outputs)
 ```
 

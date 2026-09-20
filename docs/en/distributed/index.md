@@ -16,7 +16,7 @@ RayOrch
   └─ reconstruct results and reports
 ```
 
-Connect to an existing cluster with `address="auto"` in `rayorch.run()` or `Executor`. Ray places each persistent actor according to the options declared on its Call.
+Connect to an existing cluster with `address="auto"` in `pipeline.run()` or `Executor`. The equivalent functional form `rayorch.run(pipeline, ...)` remains available. Ray places each persistent actor according to the options declared on its Call.
 
 ## Multi-node contract
 

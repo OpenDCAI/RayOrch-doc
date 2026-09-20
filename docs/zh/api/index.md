@@ -4,7 +4,7 @@
 
 | API | 用途 |
 | --- | --- |
-| `Pipeline` | 在 `forward()` 中声明静态数据流 |
+| `Pipeline` | 在 `forward()` 中声明静态数据流，并通过 `pipeline.run(...)` 执行一次有限输入 |
 | `RayModule` | 声明 UDF、构造参数、输出数和资源 |
 | `function` | 把 callable 转为无状态 `RayModule` |
 | `F.expand/filter/broadcast/reduce` | 声明基数和血缘 |

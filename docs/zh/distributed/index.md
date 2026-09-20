@@ -16,7 +16,7 @@ RayOrch
   └─ 重建结果和报告
 ```
 
-在 `rayorch.run()` 或 `Executor` 中传入 `address="auto"` 即可连接现有集群。Ray 根据每个 Call 声明的资源选项放置常驻 Actor。
+在 `pipeline.run()` 或 `Executor` 中传入 `address="auto"` 即可连接现有集群；等价的函数式入口 `rayorch.run(pipeline, ...)` 仍然保留。Ray 根据每个 Call 声明的资源选项放置常驻 Actor。
 
 ## 多机运行契约
 

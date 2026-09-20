@@ -79,8 +79,8 @@ class GpuPool(ro.Pipeline):
 
 
 if __name__ == "__main__":
-    result = ro.run(
-        GpuPool(),
+    pipeline = GpuPool()
+    result = pipeline.run(
         ["left", "right"],
         address="auto",
     )
@@ -112,8 +112,7 @@ self.infer = ro.RayModule(Infer).ray_options(
 ```
 
 ```python
-result = ro.run(
-    pipeline,
+result = pipeline.run(
     inputs,
     address="auto",
     input_batch_size=24,

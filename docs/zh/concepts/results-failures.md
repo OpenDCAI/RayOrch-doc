@@ -5,7 +5,7 @@
 `RunResult.outputs` 保持 Pipeline 声明的输出结构。成功业务值原样返回，包括 `None` 和空列表。
 
 ```python
-result = ro.run(MyPipeline(), inputs)
+result = MyPipeline().run(inputs)
 print(result.outputs)
 print(result.elapsed_s)
 print(result.rpc_count)
