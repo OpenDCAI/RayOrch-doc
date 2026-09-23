@@ -4,6 +4,7 @@
 
 ## 真实模型负载
 
+- [MinerU Scale（真实负载）](mineru-scale.md)：生产化加固的本地/HDFS PDF 处理、可配置大规模 Actor 池、原子输出和断点复用。
 - [MinerU PDF](mineru.md)：动态页面展开、跨 PDF GPU 组批和保序文档重建。
 - [YOLO → SAM](yolo-sam.md)：两个常驻视觉模型池组成的多阶段图片流水线。
 - [双 vLLM](dual-vllm.md)：两个常驻 LLM 引擎串联的生成与改写流程。

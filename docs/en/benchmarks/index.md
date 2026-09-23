@@ -14,6 +14,7 @@ flowchart LR
 
 | Benchmark | Type | Core topology | What to observe |
 | --- | --- | --- | --- |
+| [`MinerUScaleBench`](mineru-scale.md) | **Real workload / scale** | local or HDFS PDF → Page → MinerU → atomic Document | real end-to-end execution, large actor pools, fractional GPUs, batching, resume, shared-output behavior |
 | [`MinerUBench`](mineru.md) | Real model | PDF → Page → MinerU → Document | page throughput, multi-GPU scaling, cross-PDF batching, ordered reconstruction |
 | [`YoloSamBench`](yolo-sam.md) | Real model | Image → YOLO → SAM → Save | balance between persistent model pools, stage bottlenecks, end-to-end image throughput |
 | [`DualVllmBench`](dual-vllm.md) | Real model | Prompt → vLLM A → vLLM B | two-engine composition, model-stage time, batching efficiency |

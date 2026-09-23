@@ -25,6 +25,7 @@ export const enSidebar: ThemeSidebarMulti = {
       icon: 'carbon:machine-learning-model',
       collapsed: false,
       items: [
+        { text: 'MinerU Scale — Real workload', link: 'mineru-scale' },
         { text: 'MinerU PDF', link: 'mineru' },
         { text: 'YOLO → SAM', link: 'yolo-sam' },
         { text: 'Dual vLLM', link: 'dual-vllm' },
