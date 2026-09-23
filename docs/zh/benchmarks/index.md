@@ -14,6 +14,7 @@ flowchart LR
 
 | Benchmark | 类型 | 核心拓扑 | 主要观察点 |
 | --- | --- | --- | --- |
+| [`MinerUScaleBench`](mineru-scale.md) | **真实负载 / 规模化** | 本地或 HDFS PDF → Page → MinerU → 原子文档提交 | 真实端到端运行、大 Actor 池、分数 GPU、组批、断点复用和共享输出行为 |
 | [`MinerUBench`](mineru.md) | 真实模型 | PDF → Page → MinerU → Document | 页面吞吐、多 GPU 扩展、跨 PDF 组批、保序重建 |
 | [`YoloSamBench`](yolo-sam.md) | 真实模型 | Image → YOLO → SAM → Save | 串联模型池的吞吐平衡、阶段瓶颈、端到端图像吞吐 |
 | [`DualVllmBench`](dual-vllm.md) | 真实模型 | Prompt → vLLM A → vLLM B | 双引擎串联、模型阶段耗时与批处理效率 |

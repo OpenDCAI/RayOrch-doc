@@ -4,6 +4,7 @@ Built-in Benchmarks now have dedicated pages. Every page includes a workload exp
 
 ## Real-model workloads
 
+- [MinerU Scale — real workload](mineru-scale.md): production-hardened local/HDFS PDF processing, configurable large actor pools, atomic output, and resume.
 - [MinerU PDF](mineru.md): dynamic page fan-out, cross-PDF GPU batching, and ordered document reconstruction.
 - [YOLO → SAM](yolo-sam.md): a multi-stage image pipeline with two persistent vision-model pools.
 - [Dual vLLM](dual-vllm.md): generation and refinement through two persistent LLM engines.
