@@ -15,6 +15,7 @@ flowchart LR
 | Benchmark | Type | Core topology | What to observe |
 | --- | --- | --- | --- |
 | [`MinerUBench`](mineru.md) | Real model | PDF → Page → MinerU → Document | page throughput, multi-GPU scaling, cross-PDF batching, ordered reconstruction |
+| [`Panda70MBench`](panda70m.md) | Real model | Panda source → clips → four frame teachers → source JSON | source ownership, temporal prompt fusion, persistent GPU actors, ordered clip reduction |
 | [`YoloSamBench`](yolo-sam.md) | Real model | Image → YOLO → SAM → Save | balance between persistent model pools, stage bottlenecks, end-to-end image throughput |
 | [`DualVllmBench`](dual-vllm.md) | Real model | Prompt → vLLM A → vLLM B | two-engine composition, model-stage time, batching efficiency |
 | [`SglangVllmBench`](sglang-vllm.md) | Real model | Prompt → SGLang → vLLM | cross-Conda scheduling overhead and stability |
