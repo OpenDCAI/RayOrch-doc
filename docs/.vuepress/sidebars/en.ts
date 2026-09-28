@@ -27,6 +27,7 @@ export const enSidebar: ThemeSidebarMulti = {
       items: [
         { text: 'MinerU Scale — Real workload', link: 'mineru-scale' },
         { text: 'MinerU PDF', link: 'mineru' },
+        { text: 'Flash-MinerU application', link: 'flash-mineru' },
         { text: 'Panda-70M Video Caption', link: 'panda70m' },
         { text: 'YOLO → SAM', link: 'yolo-sam' },
         { text: 'Dual vLLM', link: 'dual-vllm' },

@@ -53,3 +53,9 @@ my_workload/
 ```
 
 Start with these three files. Add configuration machinery only when the experiment becomes reusable.
+## Continue from here
+
+- Need a variable number of children? Read [Cardinality and Lineage](cardinality.md).
+- Need to understand dropped, failed, and suppressed outputs? Read [Results, Failures, and Recovery](results-failures.md).
+- Need to tune actors and batches? Read [Resources and Batching](../distributed/resources.md).
+- Need to run across machines or environments? Read [Distributed Execution](../distributed/) and [Cross-environment Stages](../distributed/cross-environment.md).

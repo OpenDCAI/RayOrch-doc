@@ -5,6 +5,10 @@
 如果需要本地/HDFS 多输入、分数 GPU Actor、原子文档提交、断点复用和已验证的大规模
 配置，请使用 [`MinerUScaleBench`](mineru-scale.md)。
 
+## Flash-MinerU：持续维护的应用路径
+
+[Flash-MinerU](https://github.com/OpenDCAI/Flash-MinerU) 将同样的形状用于持续维护的 MinerU 集成：PDF → 页面 → GPU VLM/OCR → 按序组装文档。它当前的流水线并行路径在单机 8×A100 上处理 368 个 PDF 约 **8.5 分钟**，八进程 MinerU 基线约 **14 分钟**（该配置下约 **1.7×**）。数据集和命令见 [Flash-MinerU Benchmark](https://github.com/OpenDCAI/Flash-MinerU#-benchmark)。这些数字是特定负载的实测结果，不是对所有环境的通用承诺。
+
 ## 拓扑
 
 ```mermaid

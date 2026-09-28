@@ -11,6 +11,9 @@ Built-in Benchmarks now have dedicated pages. Every page includes a workload exp
 - [Dual vLLM](dual-vllm.md): generation and refinement through two persistent LLM engines.
 - [SGLang → vLLM](sglang-vllm.md): one Pipeline whose inference backends run in separate Conda environments.
 
+## Application integrations
+
+- [Flash-MinerU](flash-mineru.md): a maintained PDF → pages → GPU VLM/OCR → ordered document application, with the current pipeline-parallel benchmark context.
 ## Dependency-free topology references
 
 - [Nested Document](document-topology.md): two levels of Document → Page → TableJob expansion and reduction.
