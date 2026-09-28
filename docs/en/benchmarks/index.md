@@ -14,6 +14,7 @@ flowchart LR
 
 | Benchmark | Type | Core topology | What to observe |
 | --- | --- | --- | --- |
+| [`MinerUScaleBench`](mineru-scale.md) | **Real workload / scale** | local or HDFS PDF → Page → MinerU → atomic Document | real end-to-end execution, large actor pools, fractional GPUs, batching, resume, shared-output behavior |
 | [`MinerUBench`](mineru.md) | Real model | PDF → Page → MinerU → Document | page throughput, multi-GPU scaling, cross-PDF batching, ordered reconstruction |
 | [`Panda70MBench`](panda70m.md) | Real model | Panda source → clips → four frame teachers → source JSON | source ownership, temporal prompt fusion, persistent GPU actors, ordered clip reduction |
 | [`YoloSamBench`](yolo-sam.md) | Real model | Image → YOLO → SAM → Save | balance between persistent model pools, stage bottlenecks, end-to-end image throughput |

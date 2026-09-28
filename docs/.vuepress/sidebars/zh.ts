@@ -25,6 +25,7 @@ export const zhSidebar: ThemeSidebarMulti = {
       icon: 'carbon:machine-learning-model',
       collapsed: false,
       items: [
+        { text: 'MinerU Scale（真实负载）', link: 'mineru-scale' },
         { text: 'MinerU PDF', link: 'mineru' },
         { text: 'Panda-70M 视频描述', link: 'panda70m' },
         { text: 'YOLO → SAM', link: 'yolo-sam' },

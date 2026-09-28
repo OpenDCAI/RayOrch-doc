@@ -2,6 +2,9 @@
 
 `MinerUBench` 是内置案例中最完整的真实模型负载：一个 PDF 动态展开成数量不等的页面，CPU Actor 负责渲染，常驻 GPU Actor 运行 MinerU 2.5 与 vLLM，页面结果即使乱序完成，也会按原 PDF 和页码归并后再生成 Markdown、版面 JSON 和图片。
 
+如果需要本地/HDFS 多输入、分数 GPU Actor、原子文档提交、断点复用和已验证的大规模
+配置，请使用 [`MinerUScaleBench`](mineru-scale.md)。
+
 ## 拓扑
 
 ```mermaid

@@ -2,6 +2,10 @@
 
 `MinerUBench` is the most complete real-model workload included with RayOrch. A PDF dynamically expands into a variable number of pages, CPU actors render them, persistent GPU actors run MinerU 2.5 with vLLM, and page results are reconstructed by PDF and page index before writing Markdown, layout JSON, and images—even when physical completion is out of order.
 
+For local/HDFS multi-root input, fractional GPU actor layouts, atomic document
+commits, resume, and the validated large-scale configuration, use
+[`MinerUScaleBench`](mineru-scale.md).
+
 ## Topology
 
 ```mermaid
