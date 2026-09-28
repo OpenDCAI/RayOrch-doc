@@ -53,3 +53,9 @@ my_workload/
 ```
 
 先从这三个文件开始。只有实验需要被复用时，才增加配置和 Benchmark 包装。
+## 接下来阅读
+
+- 需要处理数量不固定的子项？阅读[基数与血缘](cardinality.md)。
+- 想理解 DROPPED、FAILED 和 SUPPRESSED？阅读[结果、失败与恢复](results-failures.md)。
+- 需要调整 Actor 和 batch？阅读[资源、副本与批处理](../distributed/resources.md)。
+- 需要跨机器或跨环境运行？阅读[分布式运行契约](../distributed/)和[跨环境阶段](../distributed/cross-environment.md)。

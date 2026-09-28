@@ -6,6 +6,10 @@ For local/HDFS multi-root input, fractional GPU actor layouts, atomic document
 commits, resume, and the validated large-scale configuration, use
 [`MinerUScaleBench`](mineru-scale.md).
 
+## Flash-MinerU: the maintained application path
+
+[Flash-MinerU](https://github.com/OpenDCAI/Flash-MinerU) applies the same shape to a maintained MinerU integration: PDF → pages → GPU VLM/OCR → ordered document assembly. Its current pipeline-parallel path reports about **8.5 minutes for 368 PDFs on one 8×A100 host**, compared with about **14 minutes** for its eight-process MinerU baseline (roughly **1.7×** in that setup). Read the [Flash-MinerU benchmark notes](https://github.com/OpenDCAI/Flash-MinerU#-benchmark) for the dataset and commands. These figures are workload measurements, not universal guarantees.
+
 ## Topology
 
 ```mermaid

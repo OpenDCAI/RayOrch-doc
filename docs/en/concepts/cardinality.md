@@ -2,6 +2,18 @@
 
 Cardinality describes how many logical items exist and how they relate to their parents. RayOrch makes those relationships explicit with `rayorch.F`.
 
+## The recurring `1 → M → 1` shape
+
+This pattern appears whenever one record expands into an input-dependent number of work items and later returns to one parent result:
+
+| Workload | Expansion | Model stage | Reduction |
+| --- | --- | --- | --- |
+| PDF understanding | document → pages or regions | OCR / VLM | pages → document |
+| Video understanding | video → frames or clips | vision / caption model | frames → summary |
+| Image segmentation | image → detected regions | segmenter | regions → annotated image |
+
+The number of children is data-dependent. The runtime therefore keeps two facts separate: **logical membership** (which parent owns a child and where it belongs) and **physical batching** (which ready children happen to share one UDF call). `expand` and `reduce` declare the first; the scheduler can optimize the second.
+
 ## `expand`: one parent becomes many children
 
 The UDF returns one list of children for each input row. `expand` moves from the parent domain into the child domain.

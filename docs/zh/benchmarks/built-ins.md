@@ -11,6 +11,9 @@
 - [双 vLLM](dual-vllm.md)：两个常驻 LLM 引擎串联的生成与改写流程。
 - [SGLang → vLLM](sglang-vllm.md)：两个推理后端位于不同 Conda 环境的跨环境 Pipeline。
 
+## 应用集成
+
+- [Flash-MinerU](flash-mineru.md)：持续维护的 PDF → 页面 → GPU VLM/OCR → 按序组装文档应用，并包含当前流水线并行 Benchmark 背景。
 ## 无依赖拓扑参考
 
 - [嵌套文档](document-topology.md)：Document → Page → TableJob 的两层展开与归并。

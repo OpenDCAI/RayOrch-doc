@@ -27,6 +27,7 @@ export const zhSidebar: ThemeSidebarMulti = {
       items: [
         { text: 'MinerU Scale（真实负载）', link: 'mineru-scale' },
         { text: 'MinerU PDF', link: 'mineru' },
+        { text: 'Flash-MinerU 应用', link: 'flash-mineru' },
         { text: 'Panda-70M 视频描述', link: 'panda70m' },
         { text: 'YOLO → SAM', link: 'yolo-sam' },
         { text: '双 vLLM', link: 'dual-vllm' },
