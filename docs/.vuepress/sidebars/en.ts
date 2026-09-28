@@ -26,6 +26,7 @@ export const enSidebar: ThemeSidebarMulti = {
       collapsed: false,
       items: [
         { text: 'MinerU PDF', link: 'mineru' },
+        { text: 'Panda-70M Video Caption', link: 'panda70m' },
         { text: 'YOLO → SAM', link: 'yolo-sam' },
         { text: 'Dual vLLM', link: 'dual-vllm' },
         { text: 'SGLang → vLLM', link: 'sglang-vllm' },

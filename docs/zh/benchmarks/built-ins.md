@@ -5,6 +5,7 @@
 ## 真实模型负载
 
 - [MinerU PDF](mineru.md)：动态页面展开、跨 PDF GPU 组批和保序文档重建。
+- [Panda-70M 视频描述](panda70m.md)：按源视频维护 clip 归属、四个时间位置的 Qwen teacher 和有序源视频聚合。
 - [YOLO → SAM](yolo-sam.md)：两个常驻视觉模型池组成的多阶段图片流水线。
 - [双 vLLM](dual-vllm.md)：两个常驻 LLM 引擎串联的生成与改写流程。
 - [SGLang → vLLM](sglang-vllm.md)：两个推理后端位于不同 Conda 环境的跨环境 Pipeline。

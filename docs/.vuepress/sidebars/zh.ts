@@ -26,6 +26,7 @@ export const zhSidebar: ThemeSidebarMulti = {
       collapsed: false,
       items: [
         { text: 'MinerU PDF', link: 'mineru' },
+        { text: 'Panda-70M 视频描述', link: 'panda70m' },
         { text: 'YOLO → SAM', link: 'yolo-sam' },
         { text: '双 vLLM', link: 'dual-vllm' },
         { text: 'SGLang → vLLM', link: 'sglang-vllm' },

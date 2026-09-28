@@ -15,6 +15,7 @@ flowchart LR
 | Benchmark | 类型 | 核心拓扑 | 主要观察点 |
 | --- | --- | --- | --- |
 | [`MinerUBench`](mineru.md) | 真实模型 | PDF → Page → MinerU → Document | 页面吞吐、多 GPU 扩展、跨 PDF 组批、保序重建 |
+| [`Panda70MBench`](panda70m.md) | 真实模型 | Panda 源视频 → clip → 四个帧 teacher → 源视频 JSON | 源视频归属、时间 prompt 融合、常驻 GPU Actor、有序 clip 聚合 |
 | [`YoloSamBench`](yolo-sam.md) | 真实模型 | Image → YOLO → SAM → Save | 串联模型池的吞吐平衡、阶段瓶颈、端到端图像吞吐 |
 | [`DualVllmBench`](dual-vllm.md) | 真实模型 | Prompt → vLLM A → vLLM B | 双引擎串联、模型阶段耗时与批处理效率 |
 | [`SglangVllmBench`](sglang-vllm.md) | 真实模型 | Prompt → SGLang → vLLM | 跨 Conda 环境的调度开销与稳定性 |

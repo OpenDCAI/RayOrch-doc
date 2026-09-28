@@ -5,6 +5,7 @@ Built-in Benchmarks now have dedicated pages. Every page includes a workload exp
 ## Real-model workloads
 
 - [MinerU PDF](mineru.md): dynamic page fan-out, cross-PDF GPU batching, and ordered document reconstruction.
+- [Panda-70M Video Caption](panda70m.md): source-owned clip fan-out, four temporal Qwen teachers, and ordered source reduction.
 - [YOLO → SAM](yolo-sam.md): a multi-stage image pipeline with two persistent vision-model pools.
 - [Dual vLLM](dual-vllm.md): generation and refinement through two persistent LLM engines.
 - [SGLang → vLLM](sglang-vllm.md): one Pipeline whose inference backends run in separate Conda environments.
